@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Shared Order Tracker</title>
+  </head>
+  <body>
+    <h1>Shared Order Tracker</h1>
+
+    <form id="orderForm">
+      <label for="person">Name: </label>
+      <input type="text" id="person" required />
+      <br /><br />
+
+      <label for="item">Item Ordered: </label>
+      <input type="text" id="item" required />
+      <br /><br />
+
+      <label for="price">Price: </label>
+      <input type="number" id="price" required />
+      <br /><br />
+
+      <button type="submit">Add to Order</button>
+    </form>
+
+    <h2>Current Orders</h2>
+    <ul id="ordersList"></ul>
+
+    <!-- Firebase JS SDKs (no build tools) -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+    <script>
+      // Replace with your actual config object
+      const firebaseConfig = {
+        apiKey: "YOUR-API-KEY",
+        authDomain: "YOUR-PROJECT.firebaseapp.com",
+        projectId: "YOUR-PROJECT-ID",
+      };
+
+      // Initialize Firebase (compat libraries for simplicity)
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // Reference to a collection called "orders"
+      const ordersRef = db.collection("orders");
+
+      // Submit form -> add a document
+      document.getElementById("orderForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const person = document.getElementById("person").value.trim();
+        const item = document.getElementById("item").value.trim();
+        const price = parseFloat(document.getElementById("price").value);
+
+        if (!person || !item || isNaN(price)) return;
+
+        await ordersRef.add({
+          person,
+          item,
+          price,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+        // Clear form
+        document.getElementById("orderForm").reset();
+      });
+
+      // Listen in real-time for changes to "orders"
+      ordersRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+        const ordersList = document.getElementById("ordersList");
+        ordersList.innerHTML = ""; // clear old list
+
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const li = document.createElement("li");
+          li.textContent = `${data.person} ordered "${data.item}" for ₹${data.price}`;
+          ordersList.appendChild(li);
+        });
+      });
+    </script>
+  </body>
+</html>
