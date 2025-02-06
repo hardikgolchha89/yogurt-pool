@@ -26,50 +26,31 @@
     <h2>Current Orders</h2>
     <ul id="ordersList"></ul>
 
-    <!-- 1) Load Firebase (compat versions) -->
+    <!-- Load the older "compat" libraries for Firebase App & Firestore -->
     <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
-<script>
-  // Then call:
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  // ...
-</script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
 
     <script>
-      // 2) Put your Firebase config here (NO "import" lines):
-     // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+      // 1) Put your Firebase config here (NO "import" lines):
+      const firebaseConfig = {
+        apiKey: "YOUR-API-KEY",
+        authDomain: "YOUR-PROJECT-ID.firebaseapp.com",
+        projectId: "YOUR-PROJECT-ID",
+        storageBucket: "YOUR-PROJECT-ID.appspot.com",
+        messagingSenderId: "1234567890",
+        appId: "1:1234567890:web:abcdef123456"
+      };
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAqmxL9HMVuD3ecghkZaqMleXpBGftQt7c",
-  authDomain: "yogurt-pool.firebaseapp.com",
-  projectId: "yogurt-pool",
-  storageBucket: "yogurt-pool.firebasestorage.app",
-  messagingSenderId: "977726723390",
-  appId: "1:977726723390:web:2cc070fa4684711c7c486f",
-  measurementId: "G-0B1QQGD9ES"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-      // 3) Initialize Firebase using compat
+      // 2) Initialize Firebase using the compat version
       firebase.initializeApp(firebaseConfig);
 
-      // 4) Get Firestore database
+      // 3) Get Firestore
       const db = firebase.firestore();
 
-      // 5) Reference the "orders" collection
+      // 4) Reference your "orders" collection
       const ordersRef = db.collection("orders");
 
-      // 6) On form submission, add a new document
+      // 5) Handle form submission -> add doc
       document.getElementById("orderForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const person = document.getElementById("person").value.trim();
@@ -91,7 +72,7 @@ const analytics = getAnalytics(app);
         }
       });
 
-      // 7) Listen in real time for changes to "orders"
+      // 6) Listen in real-time to "orders" -> update <ul>
       ordersRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
         const ordersList = document.getElementById("ordersList");
         ordersList.innerHTML = ""; // Clear current list
