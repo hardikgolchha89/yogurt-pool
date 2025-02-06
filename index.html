@@ -28,7 +28,13 @@
 
     <!-- 1) Load Firebase (compat versions) -->
     <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+<script>
+  // Then call:
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  // ...
+</script>
 
     <script>
       // 2) Put your Firebase config here (NO "import" lines):
