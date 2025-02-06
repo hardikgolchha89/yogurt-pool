@@ -31,11 +31,49 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
     <script>
       // Replace with your actual config object
-      const firebaseConfig = {
-        apiKey: "YOUR-API-KEY",
-        authDomain: "YOUR-PROJECT.firebaseapp.com",
-        projectId: "YOUR-PROJECT-ID",
-      };
+
+
+      const ordersRef = db.collection("orders");
+
+// Example: add a document
+ordersRef.add({
+  person: "Alice",
+  item: "Yogurt",
+  price: 50,
+  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+});
+
+// Example: real-time listener
+ordersRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+  snapshot.forEach((doc) => {
+    console.log(doc.id, "=>", doc.data());
+  });
+});
+
+
+
+      
+      // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAqmxL9HMVuD3ecghkZaqMleXpBGftQt7c",
+  authDomain: "yogurt-pool.firebaseapp.com",
+  projectId: "yogurt-pool",
+  storageBucket: "yogurt-pool.firebasestorage.app",
+  messagingSenderId: "977726723390",
+  appId: "1:977726723390:web:2cc070fa4684711c7c486f",
+  measurementId: "G-0B1QQGD9ES"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
       // Initialize Firebase (compat libraries for simplicity)
       firebase.initializeApp(firebaseConfig);
