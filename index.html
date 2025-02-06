@@ -77,11 +77,14 @@ const analytics = getAnalytics(app);
 
         // Add a document to Firestore
         await ordersRef.add({
-          person,
-          item,
-          price,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        });
+  person,
+  item,
+  price,
+  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+})
+.catch(err => {
+  console.error("Error adding document:", err);
+});
 
         // Clear the form
         e.target.reset();
